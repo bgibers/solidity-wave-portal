@@ -44,7 +44,7 @@ contract WavePortal is Ownable {
     // Public functions
     function wave(string memory _message) public {
         require(
-            lastWavedAt[msg.sender] + 30 seconds < block.timestamp,
+            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
             "Wait 15m"
         );
 
@@ -64,8 +64,8 @@ contract WavePortal is Ownable {
             );
 
             (bool success, ) = (msg.sender).call{value: prizeAmount}("");
+            console.log('Player Won!');
             require(success, "Failed to withdraw money from contract.");
-    
         }
 
         emit NewWave(msg.sender, block.timestamp, _message);
@@ -84,6 +84,10 @@ contract WavePortal is Ownable {
         console.log("User has waved %d times", waveCountByUser[waver]);
         return waveCountByUser[waver];
     }
+
+    function getTime() public view returns (uint256){
+        return block.timestamp; 
+    }   
 
     // Private functions
     function didPlayerWin() private view returns (bool) {
